@@ -1,4 +1,4 @@
-import { v1 as uuidv1 } from "uuid";
+// import { v1 as uuidv1 } from "uuid";
 import React, { useEffect, useRef, useState } from "react";
 import {
   database,
@@ -10,12 +10,15 @@ import {
   getDocs,
   get,
   child,
+  updateProfile,
+  update,
 } from "./firebaseConfig";
 import Answers from "./Answers";
 
-function Usurvey() {
-  const [uid, setUid] = useState(uuidv1());
-  const [studentName, setStudentName] = useState("");
+function Usurvey({ user }) {
+  const uid = user.uid;
+  // const [uid, setUid] = useState(uuidv1());
+  const [studentName, setStudentName] = useState(user.displayName);
   const [answers, setAnswers] = useState({
     answer1: "",
     answer2: "",
@@ -29,8 +32,15 @@ function Usurvey() {
   const nameRef = useRef(null);
 
   const nameSubmit = (event) => {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
     setStudentName(nameRef.current.value);
+    updateProfile(user, {
+      displayName: nameRef.current.value,
+    }).then(() => {
+      update(ref(database, "users/" + uid), {
+        name: user.displayName,
+      });
+    });
   };
 
   const answerSelected = (event) => {
@@ -99,6 +109,9 @@ function Usurvey() {
             newItems.push(newItem);
           });
           setDb_arr(newItems);
+          newItems.forEach((rec) => {
+            if (rec.id === uid) setAnswers(rec.answers);
+          });
         } else {
           console.log("No data available");
         }
@@ -148,7 +161,7 @@ function Usurvey() {
   let student_name;
   let questions;
 
-  if (studentName === "" && !isSubmitted) {
+  if (!studentName && !isSubmitted) {
     student_name = (
       <div className="form-container">
         <h1>Hey Student, please let us know your name : </h1>
@@ -166,7 +179,7 @@ function Usurvey() {
       </div>
     );
     questions = "";
-  } else if (studentName !== "" && !isSubmitted) {
+  } else if (studentName && !isSubmitted) {
     student_name = <h1>Welcome to U-survey, {studentName}</h1>;
     questions = (
       <div>
@@ -180,6 +193,7 @@ function Usurvey() {
               name="answer1"
               value={"Technology"}
               onChange={answerSelected}
+              checked={answers.answer1 === "Technology"}
             />
             Technology
             <input
@@ -187,6 +201,7 @@ function Usurvey() {
               name="answer1"
               value={"Design"}
               onChange={answerSelected}
+              checked={answers.answer1 === "Design"}
             />
             Design
             <input
@@ -194,6 +209,7 @@ function Usurvey() {
               name="answer1"
               value={"Marketing"}
               onChange={answerSelected}
+              checked={answers.answer1 === "Marketing"}
             />
             Marketing
           </div>
@@ -205,6 +221,7 @@ function Usurvey() {
               name="answer2"
               value={"student"}
               onChange={answerSelected}
+              checked={answers.answer2 === "student"}
             />
             Student
             <input
@@ -212,6 +229,7 @@ function Usurvey() {
               name="answer2"
               value={"in-job"}
               onChange={answerSelected}
+              checked={answers.answer2 === "in-job"}
             />
             In a job
             <input
@@ -219,6 +237,7 @@ function Usurvey() {
               name="answer2"
               value={"looking-job"}
               onChange={answerSelected}
+              checked={answers.answer2 === "looking-job"}
             />
             Looking for a job
           </div>
@@ -230,6 +249,7 @@ function Usurvey() {
               name="answer3"
               value={"yes"}
               onChange={answerSelected}
+              checked={answers.answer3 === "yes"}
             />
             Yes
             <input
@@ -237,6 +257,7 @@ function Usurvey() {
               name="answer3"
               value={"no"}
               onChange={answerSelected}
+              checked={answers.answer3 === "no"}
             />
             No
             <input
@@ -244,6 +265,7 @@ function Usurvey() {
               name="answer3"
               value={"maybe"}
               onChange={answerSelected}
+              checked={answers.answer3 === "maybe"}
             />
             Maybe
           </div>
@@ -255,6 +277,7 @@ function Usurvey() {
               name="answer4"
               value={"v-bad"}
               onChange={answerSelected}
+              checked={answers.answer4 === "v-bad"}
             />
             Very Bad
             <input
@@ -262,6 +285,7 @@ function Usurvey() {
               name="answer4"
               value={"bad"}
               onChange={answerSelected}
+              checked={answers.answer4 === "bad"}
             />
             Bad
             <input
@@ -269,6 +293,7 @@ function Usurvey() {
               name="answer4"
               value={"avg"}
               onChange={answerSelected}
+              checked={answers.answer4 === "avg"}
             />
             Average
             <input
@@ -276,6 +301,7 @@ function Usurvey() {
               name="answer4"
               value={"good"}
               onChange={answerSelected}
+              checked={answers.answer4 === "good"}
             />
             Good
             <input
@@ -283,6 +309,7 @@ function Usurvey() {
               name="answer4"
               value={"v-good"}
               onChange={answerSelected}
+              checked={answers.answer4 === "v-good"}
             />
             Very Good
           </div>
@@ -292,7 +319,7 @@ function Usurvey() {
             <textarea
               name="answer5"
               onChange={answerSelected}
-              placeholder="Write your review here..."
+              placeholder={answers.answer5 || "Write your review here..."}
               rows="3"
               cols="50"
             />
@@ -301,7 +328,7 @@ function Usurvey() {
         </form>
       </div>
     );
-  } else if (studentName !== "" && isSubmitted) {
+  } else if (studentName && isSubmitted) {
     student_name = <h1>Thanks, {studentName}.</h1>;
 
     const temp_xml = db_arr.map((item, i) => (

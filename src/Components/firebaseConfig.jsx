@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, get, child } from "firebase/database";
+import { getDatabase, ref, set, get, child, update } from "firebase/database";
 import {
   getFirestore,
   doc,
@@ -7,6 +7,18 @@ import {
   collection,
   getDocs,
 } from "firebase/firestore";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -22,6 +34,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 // const database = getFirestore(app);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
 
 // export { database, ref, set };
-export { database, doc, setDoc, ref, set, collection, getDocs, get, child };
+export {
+  database,
+  doc,
+  setDoc,
+  ref,
+  set,
+  collection,
+  getDocs,
+  get,
+  child,
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  update,
+  provider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+};

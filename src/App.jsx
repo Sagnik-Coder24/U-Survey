@@ -1,10 +1,34 @@
-import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import Usurvey from "./Components/Usurvey";
+import Login from "./Components/Login";
+import { auth, onAuthStateChanged, signOut } from "./Components/firebaseConfig";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleSignout = () => {
+    signOut(auth)
+      .then(() => {
+        setIsLoggedIn(false);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <>
@@ -15,23 +39,32 @@ function App() {
         <nav>
           <ul>
             <li>
-              <a href="#">Home</a>
+              <a>Home</a>
             </li>
             <li>
-              <a href="#">About</a>
+              <a>About</a>
             </li>
             <li>
-              <a href="#">Services</a>
+              <a>Services</a>
             </li>
             <li>
-              <a href="#">Contact</a>
+              <a>Contact</a>
             </li>
+            {isLoggedIn && (
+              <li>
+                <a className="signout" onClick={handleSignout}>
+                  Sign out
+                </a>
+              </li>
+            )}
           </ul>
         </nav>
       </header>
-      <Usurvey />
+      {isLoggedIn ? <Usurvey user={auth.currentUser} /> : <Login />}
     </>
   );
 }
 
 export default App;
+
+// FB BD rules
