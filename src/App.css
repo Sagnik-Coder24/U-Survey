@@ -15,6 +15,7 @@ a {
 .logo {
   height: 6em;
   padding: 1.5em;
+  padding-top: 1em;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -223,7 +224,7 @@ nav ul li .signout:hover {
   padding: 20px;
 }
 .button {
-  padding: 10px;
+  padding: 10px 20px;
   background-color: #41ff80;
   border: none;
   border-radius: 20px;

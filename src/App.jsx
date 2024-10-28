@@ -21,6 +21,8 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log(user);
+
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);

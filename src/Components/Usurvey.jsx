@@ -106,12 +106,12 @@ function Usurvey({ user }) {
               name: childSnapshot.val().studentName,
               answers: childSnapshot.val().answers,
             };
+            if (childSnapshot.key === uid) {
+              setAnswers(childSnapshot.val().answers);
+            }
             newItems.push(newItem);
           });
           setDb_arr(newItems);
-          newItems.forEach((rec) => {
-            if (rec.id === uid) setAnswers(rec.answers);
-          });
         } else {
           console.log("No data available");
         }
@@ -347,7 +347,7 @@ function Usurvey({ user }) {
           onClick={() => setDbActive(true)}
           className={dbActive ? "invisible" : "button"}
         >
-          See database data
+          See all database data
         </button>
         {temp_xml}
       </>

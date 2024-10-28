@@ -73,8 +73,6 @@ const Login = () => {
         setErr(errorMessage);
       })
       .finally(() => {
-        setEmail("");
-        setPass("");
         setLoading(false);
       });
   };
@@ -97,10 +95,14 @@ const Login = () => {
           onChange={(e) => setPass(e.target.value)}
         />
         <div className="login-btns">
-          <button onClick={handleLogin}>Log in</button>
-          <button onClick={handleSignup}>Sign up</button>
+          <button type="button" onClick={handleLogin}>
+            Log in
+          </button>
+          <button type="button" onClick={handleSignup}>
+            Sign up
+          </button>
         </div>
-        <button className="google-btn" onClick={handleGoogle}>
+        <button type="button" className="google-btn" onClick={handleGoogle}>
           Google
         </button>
       </form>
