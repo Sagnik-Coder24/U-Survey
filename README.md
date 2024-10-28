@@ -83,7 +83,7 @@ Make sure you have the following installed:
 
 ### Deployment
 
-1. Build the app for production:
+1. **Build the app for production**:
 
    ```bash
    yarn build
@@ -91,11 +91,36 @@ Make sure you have the following installed:
    npm run build
    ```
 
-2. Deploy to Firebase Hosting:
+2. **Install Firebase CLI** (if not already installed):
 
+   ```bash
+   npm install -g firebase-tools
+   ```
+
+3. **Login to Firebase**:
+
+   ```bash
+   firebase login
+   ```
+
+4. **Initialize Firebase in your project**:
+
+   ```bash
+   firebase init
+   ```
+
+   - Select `Hosting` by using the space bar and then press enter.
+   - Choose your Firebase project from the list.
+   - Set the public directory to `dist` (or `build` if you’re using Create React App).
+   - Choose `Yes` for configuring as a single-page app (rewrite all URLs to `index.html`).
+   - Choose `No` for setting up automatic builds and deploys with GitHub.
+
+5. **Deploy to Firebase Hosting**:
    ```bash
    firebase deploy
    ```
+
+After running these commands, your app will be live on Firebase Hosting. Firebase will provide you with a URL where your web app is accessible.
 
 ## Usage
 
