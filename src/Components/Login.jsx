@@ -11,6 +11,7 @@ import {
   signInWithPopup,
   signInWithRedirect,
 } from "./firebaseConfig";
+import Loader from "./Loader/Loader";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -79,7 +80,11 @@ const Login = () => {
 
   return (
     <div className="login">
-      {loading && <div className="loading">loading...</div>}
+      {loading && (
+        <div>
+          <Loader />
+        </div>
+      )}
       {err && <div className="error">{err}</div>}
       <form>
         <input

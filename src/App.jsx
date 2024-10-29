@@ -4,9 +4,11 @@ import Usurvey from "./Components/Usurvey";
 import Login from "./Components/Login";
 import { auth, onAuthStateChanged, signOut } from "./Components/firebaseConfig";
 import { useEffect, useState } from "react";
+import Loader from "./Components/Loader/Loader";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSignout = () => {
     signOut(auth)
@@ -21,12 +23,11 @@ function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user);
-
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);
       }
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -38,7 +39,7 @@ function App() {
         <div className="logo">
           <img src={reactLogo} className="logo-img" alt="Logo" />
         </div>
-        <nav>
+        <nav className="navbar">
           <ul>
             <li>
               <a>Home</a>
@@ -62,7 +63,13 @@ function App() {
           </ul>
         </nav>
       </header>
-      {isLoggedIn ? <Usurvey user={auth.currentUser} /> : <Login />}
+      {isLoading ? (
+        <div>
+          <Loader />
+        </div>
+      ) : (
+        <>{isLoggedIn ? <Usurvey user={auth.currentUser} /> : <Login />}</>
+      )}
     </>
   );
 }

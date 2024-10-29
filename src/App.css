@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+br {
+  user-select: none;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -10,6 +14,11 @@
 }
 a {
   cursor: pointer;
+}
+
+.navbar ul {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -216,6 +225,10 @@ nav ul li a {
   font-size: 18px;
 }
 
+nav ul li .signout {
+  text-wrap: nowrap;
+}
+
 nav ul li .signout:hover {
   text-decoration: underline;
 }
@@ -276,7 +289,6 @@ nav ul li .signout:hover {
   font-style: italic;
 }
 
-/* styles.css */
 .answers-container {
   background-color: #bebebe;
   border: 4px solid #e7e7e7;
@@ -295,9 +307,10 @@ nav ul li .signout:hover {
   justify-content: space-between;
   max-width: 80%;
   margin: 10px auto;
+  column-gap: 1em;
 }
 .answers-container .name {
-  min-width: 35%;
+  flex-grow: 1;
 }
 .answers-container h2 {
   font-family: "Arial", sans-serif;
@@ -308,10 +321,51 @@ nav ul li .signout:hover {
   box-shadow: 0 0 8px rgb(0, 0, 0);
   border-radius: 8px;
   min-width: 30%;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .answers-container {
+    font-size: 14px;
+  }
+
+  .answers-container h2 {
+    font-size: 18px;
+  }
+
+  .answers-container .name {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .answers-container {
+    padding: 10px;
+    max-width: 100%;
+  }
+
+  .answers-container div {
+    flex-direction: column;
+    row-gap: 1em;
+    max-width: 80%;
+    margin-bottom: 30px;
+  }
+
+  .answers-container .name {
+    min-width: 100%;
+  }
+
+  .answers-container h2 {
+    padding: 10px;
+    min-width: 100%;
+    margin: 5px;
+  }
 }
 
 .answer-item {
   margin-bottom: 10px;
+  column-gap: 1em;
+  font-size: 14px;
 }
 
 .answer-item strong {
@@ -322,9 +376,13 @@ nav ul li .signout:hover {
   border-radius: 8px;
   min-width: 30%;
   background-color: rgb(202, 201, 201);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .answer-item span {
+  flex-grow: 1;
   font-weight: 500;
   min-width: 35%;
   color: #555;
@@ -402,7 +460,6 @@ nav ul li .signout:hover {
   background-color: #c23321;
 }
 
-.loading,
 .error {
   margin-bottom: 15px;
   color: #ff0000;

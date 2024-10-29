@@ -14,6 +14,7 @@ import {
   update,
 } from "./firebaseConfig";
 import Answers from "./Answers";
+import Loader from "./Loader/Loader";
 
 function Usurvey({ user }) {
   const uid = user.uid;
@@ -29,6 +30,7 @@ function Usurvey({ user }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [db_arr, setDb_arr] = useState([]);
   const [dbActive, setDbActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const nameRef = useRef(null);
 
   const nameSubmit = (event) => {
@@ -76,21 +78,30 @@ function Usurvey({ user }) {
 
   const questionSubmit = (event) => {
     event.preventDefault();
-    console.log("Submitting data...");
-    console.log("Student Name:", studentName);
-    console.log("Answers:", answers);
+    if (
+      answers.answer1 &&
+      answers.answer2 &&
+      answers.answer3 &&
+      answers.answer4
+    ) {
+      console.log("Submitting data...");
+      console.log("Student Name:", studentName);
+      console.log("Answers:", answers);
 
-    set(ref(database, "uSurvey/" + uid), {
-      studentName: studentName,
-      answers: answers,
-    })
-      .then(() => {
-        console.log("Data submitted successfully");
-        setIsSubmitted(true);
+      set(ref(database, "uSurvey/" + uid), {
+        studentName: studentName,
+        answers: answers,
       })
-      .catch((error) => {
-        console.error("Error submitting data: ", error);
-      });
+        .then(() => {
+          console.log("Data submitted successfully");
+          setIsSubmitted(true);
+        })
+        .catch((error) => {
+          console.error("Error submitting data: ", error);
+        });
+    } else {
+      alert("Complete the survey and then submit...");
+    }
   };
 
   useEffect(() => {
@@ -99,6 +110,8 @@ function Usurvey({ user }) {
       try {
         const snapshot = await get(child(dbRef, "uSurvey/"));
         if (snapshot.exists()) {
+          console.log(snapshot.forEach);
+
           const newItems = [];
           snapshot.forEach((childSnapshot) => {
             if (childSnapshot.key === uid) {
@@ -109,15 +122,15 @@ function Usurvey({ user }) {
               };
               setAnswers(childSnapshot.val().answers);
               newItems.push(newItem);
+              setIsLoading(false);
             }
           });
           setDb_arr(newItems);
-        } else {
-          console.log("No data available");
         }
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
+      setIsLoading(false);
     };
 
     fetchData();
@@ -153,6 +166,7 @@ function Usurvey({ user }) {
   //     } catch (error) {
   //       console.error("Error fetching data: ", error);
   //     }
+  //     setIsLoading(false);
   //   };
 
   //   fetchData();
@@ -164,7 +178,8 @@ function Usurvey({ user }) {
   if (!studentName && !isSubmitted) {
     student_name = (
       <div className="form-container">
-        <h1>Hey Student, please let us know your name : </h1>
+        <h1>Hey Student, please let us know your name:</h1>
+        <br />
         <form onSubmit={nameSubmit}>
           <input
             className="namy"
@@ -347,10 +362,18 @@ function Usurvey({ user }) {
           onClick={() => setDbActive(true)}
           className={dbActive ? "invisible" : "button"}
         >
-          See all database data
+          See database data
         </button>
         {temp_xml}
       </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div>
+        <Loader />
+      </div>
     );
   }
 
