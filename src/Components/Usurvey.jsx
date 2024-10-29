@@ -84,16 +84,11 @@ function Usurvey({ user }) {
       answers.answer3 &&
       answers.answer4
     ) {
-      console.log("Submitting data...");
-      console.log("Student Name:", studentName);
-      console.log("Answers:", answers);
-
       set(ref(database, "uSurvey/" + uid), {
         studentName: studentName,
         answers: answers,
       })
         .then(() => {
-          console.log("Data submitted successfully");
           setIsSubmitted(true);
         })
         .catch((error) => {
@@ -110,8 +105,6 @@ function Usurvey({ user }) {
       try {
         const snapshot = await get(child(dbRef, "uSurvey/"));
         if (snapshot.exists()) {
-          console.log(snapshot.forEach);
-
           const newItems = [];
           snapshot.forEach((childSnapshot) => {
             if (childSnapshot.key === uid) {
