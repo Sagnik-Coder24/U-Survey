@@ -101,15 +101,15 @@ function Usurvey({ user }) {
         if (snapshot.exists()) {
           const newItems = [];
           snapshot.forEach((childSnapshot) => {
-            const newItem = {
-              id: childSnapshot.key,
-              name: childSnapshot.val().studentName,
-              answers: childSnapshot.val().answers,
-            };
             if (childSnapshot.key === uid) {
+              const newItem = {
+                id: childSnapshot.key,
+                name: childSnapshot.val().studentName,
+                answers: childSnapshot.val().answers,
+              };
               setAnswers(childSnapshot.val().answers);
+              newItems.push(newItem);
             }
-            newItems.push(newItem);
           });
           setDb_arr(newItems);
         } else {
